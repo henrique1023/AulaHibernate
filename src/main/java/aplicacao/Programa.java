@@ -1,5 +1,8 @@
 package aplicacao;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
@@ -12,29 +15,33 @@ import dominio.Paciente;
 
 public class Programa {
 
-	public static void main(String[] args) {
-		
-		Endereco e1 = new Endereco(null, "Rua dos loucos", 5, 05656, null);
-		Paciente p1 = new Paciente(1, "joão", "1188552222", e1);
-		Especialidade esp1 = new Especialidade(22, "pediatra");
-		Medico medico = new Medico(12, "Joaquim", "11255226222", e1, esp1);
-		ConsultaPK consulta = new ConsultaPK(p1, medico);
-		
+	public static void main(String[] args) throws ParseException {
 		EntityManagerFactory emf = Persistence.createEntityManagerFactory("exemplo-jpa");
 		EntityManager em = emf.createEntityManager();
 		
+		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+		
+		
+		Endereco end = new Endereco(2, "Rua dos andes", 22, 0202020, "dadsdsdasd");
+		Especialidade esp = new Especialidade(1, "Cardiologista");
+		Paciente paciente = new Paciente(0, "João", "1198965694", sdf.parse("23/10/1519"), end);
+		Medico med = new Medico(5, "Joaquim junior", "213213213", "5asdasasd@masdas.com", sdf.parse("15/05/1965"), end, esp);
+		ConsultaPK consu = new ConsultaPK(paciente, med, 12);
+		
 		em.getTransaction().begin();
-
-		em.persist(e1);
-		em.persist(p1);
-		em.persist(esp1);
-		em.persist(medico);
+	
+		em.persist(esp);
+		em.persist(paciente);
+		em.persist(med);	
+		em.persist(end);
+		em.persist(consu);
 		
 		em.getTransaction().commit();
-		System.out.println("Pronto" + e1 + p1 + esp1 + medico+ consulta);
+		System.out.println("Pronto");
 		
 		em.close();
 		emf.close();
+		
 	}
 
 }
